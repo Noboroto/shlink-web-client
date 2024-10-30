@@ -3,15 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useToggle } from '@shlinkio/shlink-frontend-kit';
 import { clsx } from 'clsx';
 import type { FC } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import axios from 'axios';
 import type { FCWithDeps } from '../container/utils';
 import { componentFactory, useDependencies } from '../container/utils';
 import { ShlinkLogo } from './img/ShlinkLogo';
 import './MainHeader.scss';
-
-//import Cookies from "js-cookie";
 
 type MainHeaderDeps = {
 	ServersDropdown: FC;
@@ -22,15 +21,27 @@ const MainHeader: FCWithDeps<unknown, MainHeaderDeps> = () => {
 	const [isNotCollapsed, toggleCollapse, , collapse] = useToggle();
 	const location = useLocation();
 	const { pathname } = location;
+	const [email, setEmail] = useState<string | null>(null);
 
 	// In mobile devices, collapse the navbar when location changes
 	useEffect(collapse, [location, collapse]);
 
+	// Fetch email from /oauth2/userinfo
+	useEffect(() => {
+		const fetchEmail = async () => {
+			try {
+				const response = await fetch('/oauth2/userinfo');
+				setEmail((await response.json())["email"]);
+			} catch (error) {
+				console.error('Error fetching email:', error);
+			}
+		};
+
+		fetchEmail();
+	}, []);
+
 	const settingsPath = '/settings';
 	const toggleClass = clsx('main-header__toggle-icon', { 'main-header__toggle-icon--opened': isNotCollapsed });
-
-	// Google logout URL with continue parameter  
-	//const googleLogout = `https://accounts.google.com/Logout?continue=${encodeURIComponent(baseRedirect)}`;
 
 	// Final OAuth2 Proxy sign out URL  
 	const signOutUrl = `/oauth2/sign_out`;
@@ -48,9 +59,13 @@ const MainHeader: FCWithDeps<unknown, MainHeaderDeps> = () => {
 			<NavbarToggler onClick={toggleCollapse}>
 				<FontAwesomeIcon icon={arrowIcon} className={toggleClass} />
 			</NavbarToggler>
-
 			<Collapse navbar isOpen={isNotCollapsed}>
 				<Nav navbar className="ms-auto">
+					{email && (
+						<NavItem className="me-3">
+							<span className="navbar-text text-white">{email}</span>
+						</NavItem>
+					)}
 					<NavItem>
 						<NavLink tag={Link} to={settingsPath} active={pathname.startsWith(settingsPath)}>
 							<FontAwesomeIcon icon={cogsIcon} />&nbsp; Settings
