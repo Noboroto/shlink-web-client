@@ -11,5 +11,5 @@
 
 npm-debug.log*
 public/servers.json*
-*.mjs
 /.vscode
+vite.config.ts.timestamp-1730299247759-aa87db358be25.mjs
