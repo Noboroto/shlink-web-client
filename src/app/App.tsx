@@ -49,6 +49,20 @@ const App: FCWithDeps<AppProps, AppDeps> = (
   const initialServers = useRef(servers);
   const isHome = location.pathname === '/';
 
+useEffect(() => {
+	const fetchUserInfo = async () => {
+		try {
+			const response = await fetch('/oauth2/userinfo');
+			const data = await response.json();
+			console.log(data["email"]);
+		} catch (error) {
+			console.error('Error fetching user info:', error);
+		}
+	};
+
+	fetchUserInfo();
+}, []);
+
   useEffect(() => {
     // Try to fetch the remote servers if the list is empty at first
     // We use a ref because we don't care if the servers list becomes empty later

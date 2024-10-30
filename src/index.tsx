@@ -4,11 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 import pack from '../package.json';
 import { container } from './container';
 import { setUpStore } from './container/store';
-import { register as registerServiceWorker } from './serviceWorkerRegistration';
 import './index.scss';
 
 const store = setUpStore(container);
-const { App, ScrollToTop, ErrorHandler, appUpdateAvailable } = container;
+const { App, ScrollToTop, ErrorHandler } = container;
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -23,8 +22,8 @@ createRoot(document.getElementById('root')!).render(
 );
 
 // Learn more about service workers: https://cra.link/PWA
-registerServiceWorker({
-  onUpdate() {
-    store.dispatch(appUpdateAvailable());
-  },
-});
+// registerServiceWorker({
+//   onUpdate() {
+//     store.dispatch(appUpdateAvailable());
+//   },
+// });

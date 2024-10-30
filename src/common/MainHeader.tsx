@@ -1,4 +1,4 @@
-import { faChevronDown as arrowIcon, faCogs as cogsIcon } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown as arrowIcon, faCogs as cogsIcon, faRightFromBracket as logoutIcon } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useToggle } from '@shlinkio/shlink-frontend-kit';
 import { clsx } from 'clsx';
@@ -11,44 +11,61 @@ import { componentFactory, useDependencies } from '../container/utils';
 import { ShlinkLogo } from './img/ShlinkLogo';
 import './MainHeader.scss';
 
+//import Cookies from "js-cookie";
+
 type MainHeaderDeps = {
-  ServersDropdown: FC;
+	ServersDropdown: FC;
 };
 
 const MainHeader: FCWithDeps<unknown, MainHeaderDeps> = () => {
-  const { ServersDropdown } = useDependencies(MainHeader);
-  const [isNotCollapsed, toggleCollapse, , collapse] = useToggle();
-  const location = useLocation();
-  const { pathname } = location;
+	const { ServersDropdown } = useDependencies(MainHeader);
+	const [isNotCollapsed, toggleCollapse, , collapse] = useToggle();
+	const location = useLocation();
+	const { pathname } = location;
 
-  // In mobile devices, collapse the navbar when location changes
-  useEffect(collapse, [location, collapse]);
+	// In mobile devices, collapse the navbar when location changes
+	useEffect(collapse, [location, collapse]);
 
-  const settingsPath = '/settings';
-  const toggleClass = clsx('main-header__toggle-icon', { 'main-header__toggle-icon--opened': isNotCollapsed });
+	const settingsPath = '/settings';
+	const toggleClass = clsx('main-header__toggle-icon', { 'main-header__toggle-icon--opened': isNotCollapsed });
 
-  return (
-    <Navbar color="primary" dark fixed="top" className="main-header" expand="md">
-      <NavbarBrand tag={Link} to="/">
-        <ShlinkLogo className="main-header__brand-logo" color="white" /> Shlink
-      </NavbarBrand>
+	// Google logout URL with continue parameter  
+	//const googleLogout = `https://accounts.google.com/Logout?continue=${encodeURIComponent(baseRedirect)}`;
 
-      <NavbarToggler onClick={toggleCollapse}>
-        <FontAwesomeIcon icon={arrowIcon} className={toggleClass} />
-      </NavbarToggler>
+	// Final OAuth2 Proxy sign out URL  
+	const signOutUrl = `/oauth2/sign_out`;
 
-      <Collapse navbar isOpen={isNotCollapsed}>
-        <Nav navbar className="ms-auto">
-          <NavItem>
-            <NavLink tag={Link} to={settingsPath} active={pathname.startsWith(settingsPath)}>
-              <FontAwesomeIcon icon={cogsIcon} />&nbsp; Settings
-            </NavLink>
-          </NavItem>
-          <ServersDropdown />
-        </Nav>
-      </Collapse>
-    </Navbar>
-  );
+	const signOut = () => {
+		window.location.href = signOutUrl;
+	};
+
+	return (
+		<Navbar color="primary" dark fixed="top" className="main-header" expand="md">
+			<NavbarBrand tag={Link} to="/">
+				<ShlinkLogo className="main-header__brand-logo" color="white" /> Shlink
+			</NavbarBrand>
+
+			<NavbarToggler onClick={toggleCollapse}>
+				<FontAwesomeIcon icon={arrowIcon} className={toggleClass} />
+			</NavbarToggler>
+
+			<Collapse navbar isOpen={isNotCollapsed}>
+				<Nav navbar className="ms-auto">
+					<NavItem>
+						<NavLink tag={Link} to={settingsPath} active={pathname.startsWith(settingsPath)}>
+							<FontAwesomeIcon icon={cogsIcon} />&nbsp; Settings
+						</NavLink>
+					</NavItem>
+					<ServersDropdown />
+					<NavItem>
+						<NavLink href="#" onClick={signOut}>
+							<FontAwesomeIcon icon={logoutIcon} />&nbsp; Sign Out
+						</NavLink>
+					</NavItem>
+				</Nav>
+			</Collapse>
+		</Navbar>
+	);
 };
 
 export const MainHeaderFactory = componentFactory(MainHeader, ['ServersDropdown']);
