@@ -23,10 +23,11 @@ const serverWithId = (server: ServerWithId | ServerData): ServerWithId => {
   return { ...server, id: randomUUID() };
 };
 
-const serversListToMap = (servers: ServerWithId[]): ServersMap => servers.reduce<ServersMap>(
-  (acc, server) => ({ ...acc, [server.id]: server }),
-  {},
-);
+const serversListToMap = (servers: ServerWithId[]): ServersMap =>
+  servers.reduce<ServersMap>(
+    (acc, server) => ({ ...acc, [server.id]: server }),
+    {}
+  );
 
 export const { actions, reducer } = createSlice({
   name: 'shlink/servers',
@@ -38,9 +39,9 @@ export const { actions, reducer } = createSlice({
       }),
       reducer: (state, { payload }: PayloadAction<EditServer>) => {
         const { serverId, serverData } = payload;
-        return (
-          !state[serverId] ? state : { ...state, [serverId]: { ...state[serverId], ...serverData } }
-        );
+        return !state[serverId]
+          ? state
+          : { ...state, [serverId]: { ...state[serverId], ...serverData } };
       },
     },
     deleteServer: (state, { payload }) => {
@@ -65,7 +66,7 @@ export const { actions, reducer } = createSlice({
           Object.entries(state).map(([evaluatedServerId, server]) => [
             evaluatedServerId,
             { ...server, autoConnect: evaluatedServerId === serverId },
-          ]),
+          ])
         );
       },
     },
@@ -74,11 +75,15 @@ export const { actions, reducer } = createSlice({
         const payload = serversListToMap(servers.map(serverWithId));
         return { payload };
       },
-      reducer: (state, { payload: newServers }: PayloadAction<ServersMap>) => ({ ...state, ...newServers }),
+      reducer: (state, { payload: newServers }: PayloadAction<ServersMap>) => ({
+        ...state,
+        ...newServers,
+      }),
     },
   },
 });
 
-export const { editServer, deleteServer, setAutoConnect, createServers } = actions;
+export const { editServer, deleteServer, setAutoConnect, createServers } =
+  actions;
 
 export const serversReducer = reducer;

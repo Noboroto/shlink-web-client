@@ -13,13 +13,19 @@ const localStorageConfig: RLSOptions = {
   namespaceSeparator: '.',
   debounce: 300,
 };
-const preloadedState = migrateDeprecatedSettings(load(localStorageConfig) as ShlinkState);
+const preloadedState = migrateDeprecatedSettings(
+  load(localStorageConfig) as ShlinkState
+);
 
-export const setUpStore = (container: IContainer) => configureStore({
-  devTools: !isProduction,
-  reducer: initReducers(container),
-  preloadedState,
-  middleware: (defaultMiddlewaresIncludingReduxThunk) =>
-    defaultMiddlewaresIncludingReduxThunk({ immutableCheck: false, serializableCheck: false }) // State is too big for these
-      .concat(save(localStorageConfig)),
-});
+export const setUpStore = (container: IContainer) =>
+  configureStore({
+    devTools: !isProduction,
+    reducer: initReducers(container),
+    preloadedState,
+    middleware: (defaultMiddlewaresIncludingReduxThunk) =>
+      defaultMiddlewaresIncludingReduxThunk({
+        immutableCheck: false,
+        serializableCheck: false,
+      }) // State is too big for these
+        .concat(save(localStorageConfig)),
+  });

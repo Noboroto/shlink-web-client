@@ -10,11 +10,13 @@ export class ServersExporter {
   public constructor(
     private readonly storage: LocalStorage,
     private readonly window: Window,
-    private readonly jsonToCsv: JsonToCsv,
+    private readonly jsonToCsv: JsonToCsv
   ) {}
 
   public readonly exportServers = async () => {
-    const servers = Object.values(this.storage.get<ServersMap>('servers') ?? {}).map(serverWithIdToServerData);
+    const servers = Object.values(
+      this.storage.get<ServersMap>('servers') ?? {}
+    ).map(serverWithIdToServerData);
 
     try {
       const csv = this.jsonToCsv(servers);

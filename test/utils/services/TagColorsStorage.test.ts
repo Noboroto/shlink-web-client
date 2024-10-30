@@ -15,13 +15,19 @@ describe('TagColorsStorage', () => {
   describe('getTagColors', () => {
     it.each([
       [undefined, {}],
-      [{ foo: 'red', var: 'green' }, { foo: 'red', var: 'green' }],
-    ])('returns colors from local storage', (colorsFromStorage, expectedValue) => {
-      get.mockReturnValue(colorsFromStorage);
+      [
+        { foo: 'red', var: 'green' },
+        { foo: 'red', var: 'green' },
+      ],
+    ])(
+      'returns colors from local storage',
+      (colorsFromStorage, expectedValue) => {
+        get.mockReturnValue(colorsFromStorage);
 
-      expect(tagColorsStorage.getTagColors()).toEqual(expectedValue);
-      expect(get).toHaveBeenCalledOnce();
-    });
+        expect(tagColorsStorage.getTagColors()).toEqual(expectedValue);
+        expect(get).toHaveBeenCalledOnce();
+      }
+    );
   });
 
   describe('storeTagColors', () => {

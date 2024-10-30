@@ -15,23 +15,33 @@ const bottle = new Bottle();
 
 export const { container } = bottle;
 
-const lazyService = <T extends (...args: unknown[]) => unknown, K>(cont: IContainer, serviceName: string) =>
-  (...args: any[]) => (cont[serviceName] as T)(...args) as K;
+const lazyService =
+  <T extends (...args: unknown[]) => unknown, K>(
+    cont: IContainer,
+    serviceName: string
+  ) =>
+  (...args: any[]) =>
+    (cont[serviceName] as T)(...args) as K;
 
-const mapActionService = (map: LazyActionMap, actionName: string): LazyActionMap => ({
+const mapActionService = (
+  map: LazyActionMap,
+  actionName: string
+): LazyActionMap => ({
   ...map,
   // Wrap actual action service in a function so that it is lazily created the first time it is called
   [actionName]: lazyService(container, actionName),
 });
 
-const pickProps = (propsToPick: string[]) => (obj: any) => Object.fromEntries(
-  propsToPick.map((key) => [key, obj[key]]),
-);
+const pickProps = (propsToPick: string[]) => (obj: any) =>
+  Object.fromEntries(propsToPick.map((key) => [key, obj[key]]));
 
-const connect: ConnectDecorator = (propsFromState: string[] | null, actionServiceNames: string[] = []) =>
+const connect: ConnectDecorator = (
+  propsFromState: string[] | null,
+  actionServiceNames: string[] = []
+) =>
   reduxConnect(
     propsFromState ? pickProps(propsFromState) : null,
-    actionServiceNames.reduce(mapActionService, {}),
+    actionServiceNames.reduce(mapActionService, {})
   );
 
 provideAppServices(bottle, connect);

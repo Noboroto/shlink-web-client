@@ -27,10 +27,19 @@ export const provideServices = (bottle: Bottle, connect: ConnectDecorator) => {
   bottle.decorator('Home', connect(['servers'], ['resetSelectedServer']));
 
   bottle.serviceFactory('ShlinkWebComponent', () => ShlinkWebComponent);
-  bottle.factory('ShlinkWebComponentContainer', ShlinkWebComponentContainerFactory);
-  bottle.decorator('ShlinkWebComponentContainer', connect(['selectedServer', 'settings'], ['selectServer']));
+  bottle.factory(
+    'ShlinkWebComponentContainer',
+    ShlinkWebComponentContainerFactory
+  );
+  bottle.decorator(
+    'ShlinkWebComponentContainer',
+    connect(['selectedServer', 'settings'], ['selectServer'])
+  );
 
-  bottle.serviceFactory('ShlinkVersionsContainer', () => ShlinkVersionsContainer);
+  bottle.serviceFactory(
+    'ShlinkVersionsContainer',
+    () => ShlinkVersionsContainer
+  );
   bottle.decorator('ShlinkVersionsContainer', connect(['selectedServer']));
 
   bottle.serviceFactory('ErrorHandler', () => ErrorHandler);

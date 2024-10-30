@@ -16,7 +16,12 @@ import {
   selectedServerReducerCreator,
   selectServer,
 } from '../reducers/selectedServer';
-import { createServers, deleteServer, editServer, setAutoConnect } from '../reducers/servers';
+import {
+  createServers,
+  deleteServer,
+  editServer,
+  setAutoConnect,
+} from '../reducers/servers';
 import { ServersDropdown } from '../ServersDropdown';
 import { ServersExporter } from './ServersExporter';
 import { ServersImporter } from './ServersImporter';
@@ -25,19 +30,37 @@ export const provideServices = (bottle: Bottle, connect: ConnectDecorator) => {
   // Components
   bottle.factory('ManageServers', ManageServersFactory);
   bottle.decorator('ManageServers', withoutSelectedServer);
-  bottle.decorator('ManageServers', connect(['selectedServer', 'servers'], ['resetSelectedServer']));
+  bottle.decorator(
+    'ManageServers',
+    connect(['selectedServer', 'servers'], ['resetSelectedServer'])
+  );
 
   bottle.factory('ManageServersRow', ManageServersRowFactory);
 
   bottle.factory('ManageServersRowDropdown', ManageServersRowDropdownFactory);
-  bottle.decorator('ManageServersRowDropdown', connect(null, ['setAutoConnect']));
+  bottle.decorator(
+    'ManageServersRowDropdown',
+    connect(null, ['setAutoConnect'])
+  );
 
   bottle.factory('CreateServer', CreateServerFactory);
   bottle.decorator('CreateServer', withoutSelectedServer);
-  bottle.decorator('CreateServer', connect(['selectedServer', 'servers'], ['createServers', 'resetSelectedServer']));
+  bottle.decorator(
+    'CreateServer',
+    connect(
+      ['selectedServer', 'servers'],
+      ['createServers', 'resetSelectedServer']
+    )
+  );
 
   bottle.factory('EditServer', EditServerFactory);
-  bottle.decorator('EditServer', connect(['selectedServer'], ['editServer', 'selectServer', 'resetSelectedServer']));
+  bottle.decorator(
+    'EditServer',
+    connect(
+      ['selectedServer'],
+      ['editServer', 'selectServer', 'resetSelectedServer']
+    )
+  );
 
   bottle.serviceFactory('ServersDropdown', () => ServersDropdown);
   bottle.decorator('ServersDropdown', connect(['servers', 'selectedServer']));
@@ -55,10 +78,21 @@ export const provideServices = (bottle: Bottle, connect: ConnectDecorator) => {
 
   // Services
   bottle.service('ServersImporter', ServersImporter, 'csvToJson');
-  bottle.service('ServersExporter', ServersExporter, 'Storage', 'window', 'jsonToCsv');
+  bottle.service(
+    'ServersExporter',
+    ServersExporter,
+    'Storage',
+    'window',
+    'jsonToCsv'
+  );
 
   // Actions
-  bottle.serviceFactory('selectServer', selectServer, 'buildShlinkApiClient', 'loadMercureInfo');
+  bottle.serviceFactory(
+    'selectServer',
+    selectServer,
+    'buildShlinkApiClient',
+    'loadMercureInfo'
+  );
   bottle.serviceFactory('createServers', () => createServers);
   bottle.serviceFactory('deleteServer', () => deleteServer);
   bottle.serviceFactory('editServer', () => editServer);
@@ -68,6 +102,14 @@ export const provideServices = (bottle: Bottle, connect: ConnectDecorator) => {
   bottle.serviceFactory('resetSelectedServer', () => resetSelectedServer);
 
   // Reducers
-  bottle.serviceFactory('selectedServerReducerCreator', selectedServerReducerCreator, 'selectServer');
-  bottle.serviceFactory('selectedServerReducer', (obj) => obj.reducer, 'selectedServerReducerCreator');
+  bottle.serviceFactory(
+    'selectedServerReducerCreator',
+    selectedServerReducerCreator,
+    'selectServer'
+  );
+  bottle.serviceFactory(
+    'selectedServerReducer',
+    (obj) => obj.reducer,
+    'selectedServerReducerCreator'
+  );
 };

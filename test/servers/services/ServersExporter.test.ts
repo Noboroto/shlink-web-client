@@ -1,27 +1,35 @@
 import { fromPartial } from '@total-typescript/shoehorn';
 import { ServersExporter } from '../../../src/servers/services/ServersExporter';
 import type { LocalStorage } from '../../../src/utils/services/LocalStorage';
-import { appendChild, removeChild, windowMock } from '../../__mocks__/Window.mock';
+import {
+  appendChild,
+  removeChild,
+  windowMock,
+} from '../../__mocks__/Window.mock';
 
 describe('ServersExporter', () => {
   const storageMock = fromPartial<LocalStorage>({
-    get: vi.fn(() => ({
-      abc123: {
-        id: 'abc123',
-        name: 'foo',
-        autoConnect: true,
-      },
-      def456: {
-        id: 'def456',
-        name: 'bar',
-        autoConnect: false,
-      },
-    } as any)),
+    get: vi.fn(
+      () =>
+        ({
+          abc123: {
+            id: 'abc123',
+            name: 'foo',
+            autoConnect: true,
+          },
+          def456: {
+            id: 'def456',
+            name: 'bar',
+            autoConnect: false,
+          },
+        }) as any
+    ),
   });
   const erroneousToCsv = vi.fn(() => {
     throw new Error('');
   });
-  const createCsvjsonMock = (throwError = false) => (throwError ? erroneousToCsv : vi.fn(() => ''));
+  const createCsvjsonMock = (throwError = false) =>
+    throwError ? erroneousToCsv : vi.fn(() => '');
 
   describe('exportServers', () => {
     let originalConsole: Console;
@@ -39,7 +47,11 @@ describe('ServersExporter', () => {
 
     it('logs an error if something fails', () => {
       const csvjsonMock = createCsvjsonMock(true);
-      const exporter = new ServersExporter(storageMock, windowMock, csvjsonMock);
+      const exporter = new ServersExporter(
+        storageMock,
+        windowMock,
+        csvjsonMock
+      );
 
       exporter.exportServers();
 
@@ -48,8 +60,14 @@ describe('ServersExporter', () => {
     });
 
     it('makes use of download link API', () => {
-      const exporter = new ServersExporter(storageMock, windowMock, createCsvjsonMock());
-      const { document: { createElement } } = windowMock;
+      const exporter = new ServersExporter(
+        storageMock,
+        windowMock,
+        createCsvjsonMock()
+      );
+      const {
+        document: { createElement },
+      } = windowMock;
 
       exporter.exportServers();
 

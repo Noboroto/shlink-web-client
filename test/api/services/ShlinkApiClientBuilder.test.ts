@@ -1,13 +1,17 @@
 import { fromPartial } from '@total-typescript/shoehorn';
 import { buildShlinkApiClient } from '../../../src/api/services/ShlinkApiClientBuilder';
-import type { ReachableServer, SelectedServer } from '../../../src/servers/data';
+import type {
+  ReachableServer,
+  SelectedServer,
+} from '../../../src/servers/data';
 
 describe('ShlinkApiClientBuilder', () => {
   const server = fromPartial<ReachableServer>;
 
   const createBuilder = () => {
     const builder = buildShlinkApiClient(fromPartial({}));
-    return (selectedServer: SelectedServer) => builder(() => fromPartial({ selectedServer }));
+    return (selectedServer: SelectedServer) =>
+      builder(() => fromPartial({ selectedServer }));
   };
 
   it('creates new instances when provided params are different', async () => {
@@ -37,7 +41,9 @@ describe('ShlinkApiClientBuilder', () => {
   it('does not fetch from state when provided param is already selected server', () => {
     const url = 'url';
     const apiKey = 'apiKey';
-    const apiClient = buildShlinkApiClient(fromPartial({}))(server({ url, apiKey }));
+    const apiClient = buildShlinkApiClient(fromPartial({}))(
+      server({ url, apiKey })
+    );
 
     expect(apiClient['serverInfo'].baseUrl).toEqual(url);
     expect(apiClient['serverInfo'].apiKey).toEqual(apiKey);

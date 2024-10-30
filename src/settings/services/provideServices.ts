@@ -8,7 +8,10 @@ export const provideServices = (bottle: Bottle, connect: ConnectDecorator) => {
   // Components
   bottle.serviceFactory('Settings', () => Settings);
   bottle.decorator('Settings', withoutSelectedServer);
-  bottle.decorator('Settings', connect(['settings'], ['setSettings', 'resetSelectedServer']));
+  bottle.decorator(
+    'Settings',
+    connect(['settings'], ['setSettings', 'resetSelectedServer'])
+  );
 
   // Actions
   bottle.serviceFactory('setSettings', () => setSettings);

@@ -8,15 +8,19 @@ const homepage = pack.homepage?.trim();
 
 /* eslint-disable-next-line no-restricted-exports */
 export default defineConfig({
-  plugins: [react(), VitePWA({
-    mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-    strategies: 'injectManifest',
-    srcDir: './src',
-    filename: 'service-worker.ts',
-    injectRegister: false,
-    manifestFilename: 'manifest.json',
-    manifest,
-  })],
+  plugins: [
+    react(),
+    VitePWA({
+      mode:
+        process.env.NODE_ENV === 'development' ? 'development' : 'production',
+      strategies: 'injectManifest',
+      srcDir: './src',
+      filename: 'service-worker.ts',
+      injectRegister: false,
+      manifestFilename: 'manifest.json',
+      manifest,
+    }),
+  ],
   build: {
     outDir: 'build',
   },

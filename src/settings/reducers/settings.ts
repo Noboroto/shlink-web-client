@@ -2,7 +2,10 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import { mergeDeepRight } from '@shlinkio/data-manipulation';
 import { getSystemPreferredTheme } from '@shlinkio/shlink-frontend-kit';
-import type { Settings, ShortUrlsListSettings } from '@shlinkio/shlink-web-component/settings';
+import type {
+  Settings,
+  ShortUrlsListSettings,
+} from '@shlinkio/shlink-web-component/settings';
 import type { Defined } from '../../utils/types';
 
 type ShortUrlsOrder = Defined<ShortUrlsListSettings['defaultOrdering']>;
@@ -36,7 +39,8 @@ const { reducer, actions } = createSlice({
   name: 'shlink/settings',
   initialState,
   reducers: {
-    setSettings: (state: Settings, { payload }: SettingsAction) => mergeDeepRight(state, payload),
+    setSettings: (state: Settings, { payload }: SettingsAction) =>
+      mergeDeepRight(state, payload),
   },
 });
 

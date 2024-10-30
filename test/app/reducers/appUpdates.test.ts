@@ -1,4 +1,8 @@
-import { appUpdateAvailable, appUpdatesReducer, resetAppUpdate } from '../../../src/app/reducers/appUpdates';
+import {
+  appUpdateAvailable,
+  appUpdatesReducer,
+  resetAppUpdate,
+} from '../../../src/app/reducers/appUpdates';
 
 describe('appUpdatesReducer', () => {
   describe('reducer', () => {

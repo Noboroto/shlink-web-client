@@ -8,6 +8,9 @@ export interface ShlinkState {
   appUpdated: boolean;
 }
 
-export type ConnectDecorator = (props: string[] | null, actions?: string[]) => any;
+export type ConnectDecorator = (
+  props: string[] | null,
+  actions?: string[]
+) => any;
 
 export type GetState = () => ShlinkState;

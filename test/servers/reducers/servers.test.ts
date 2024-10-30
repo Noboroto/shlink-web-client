@@ -1,5 +1,9 @@
 import { fromPartial } from '@total-typescript/shoehorn';
-import type { RegularServer, ServersMap, ServerWithId } from '../../../src/servers/data';
+import type {
+  RegularServer,
+  ServersMap,
+  ServerWithId,
+} from '../../../src/servers/data';
 import {
   createServers,
   deleteServer,
@@ -16,37 +20,59 @@ describe('serversReducer', () => {
 
   describe('reducer', () => {
     it('returns edited server when action is EDIT_SERVER', () =>
-      expect(serversReducer(list, editServer('abc123', { name: 'foo' }))).toEqual({
+      expect(
+        serversReducer(list, editServer('abc123', { name: 'foo' }))
+      ).toEqual({
         abc123: { id: 'abc123', name: 'foo' },
         def456: { id: 'def456' },
       }));
 
     it('returns as it is when action is EDIT_SERVER and server does not exist', () =>
-      expect(serversReducer(list, editServer('invalid', { name: 'foo' }))).toEqual({
+      expect(
+        serversReducer(list, editServer('invalid', { name: 'foo' }))
+      ).toEqual({
         abc123: { id: 'abc123' },
         def456: { id: 'def456' },
       }));
 
     it('removes server when action is DELETE_SERVER', () =>
-      expect(serversReducer(list, deleteServer(fromPartial<ServerWithId>({ id: 'abc123' })))).toEqual({
+      expect(
+        serversReducer(
+          list,
+          deleteServer(fromPartial<ServerWithId>({ id: 'abc123' }))
+        )
+      ).toEqual({
         def456: { id: 'def456' },
       }));
 
     it('appends server when action is CREATE_SERVERS', () =>
-      expect(serversReducer(list, createServers([fromPartial<ServerWithId>({ id: 'ghi789' })]))).toEqual({
+      expect(
+        serversReducer(
+          list,
+          createServers([fromPartial<ServerWithId>({ id: 'ghi789' })])
+        )
+      ).toEqual({
         abc123: { id: 'abc123' },
         def456: { id: 'def456' },
         ghi789: { id: 'ghi789' },
       }));
 
-    it.each([
-      [true],
-      [false],
-    ])('returns state as it is when trying to set auto-connect on invalid server', (autoConnect) =>
-      expect(serversReducer(list, setAutoConnect(fromPartial<ServerWithId>({ id: 'invalid' }), autoConnect))).toEqual({
-        abc123: { id: 'abc123' },
-        def456: { id: 'def456' },
-      }));
+    it.each([[true], [false]])(
+      'returns state as it is when trying to set auto-connect on invalid server',
+      (autoConnect) =>
+        expect(
+          serversReducer(
+            list,
+            setAutoConnect(
+              fromPartial<ServerWithId>({ id: 'invalid' }),
+              autoConnect
+            )
+          )
+        ).toEqual({
+          abc123: { id: 'abc123' },
+          def456: { id: 'def456' },
+        })
+    );
 
     it('disables auto-connect on a server which is already set to auto-connect', () => {
       const listWithDisabledAutoConnect = {
@@ -54,10 +80,12 @@ describe('serversReducer', () => {
         abc123: { ...list.abc123, autoConnect: true },
       };
 
-      expect(serversReducer(
-        listWithDisabledAutoConnect,
-        setAutoConnect(fromPartial<ServerWithId>({ id: 'abc123' }), false),
-      )).toEqual({
+      expect(
+        serversReducer(
+          listWithDisabledAutoConnect,
+          setAutoConnect(fromPartial<ServerWithId>({ id: 'abc123' }), false)
+        )
+      ).toEqual({
         abc123: { id: 'abc123', autoConnect: false },
         def456: { id: 'def456' },
       });
@@ -69,10 +97,12 @@ describe('serversReducer', () => {
         abc123: { ...list.abc123, autoConnect: true },
       };
 
-      expect(serversReducer(
-        listWithEnabledAutoConnect,
-        setAutoConnect(fromPartial<ServerWithId>({ id: 'def456' }), true),
-      )).toEqual({
+      expect(
+        serversReducer(
+          listWithEnabledAutoConnect,
+          setAutoConnect(fromPartial<ServerWithId>({ id: 'def456' }), true)
+        )
+      ).toEqual({
         abc123: { id: 'abc123', autoConnect: false },
         def456: { id: 'def456', autoConnect: true },
       });
@@ -107,9 +137,14 @@ describe('serversReducer', () => {
       });
 
       it('generates an id for every provided server if they do not have it', () => {
-        const servers = Object.values(list).map(({ name, autoConnect, url, apiKey }) => (
-          { name, autoConnect, url, apiKey }
-        ));
+        const servers = Object.values(list).map(
+          ({ name, autoConnect, url, apiKey }) => ({
+            name,
+            autoConnect,
+            url,
+            apiKey,
+          })
+        );
         const { payload } = createServers(servers);
 
         expect(Object.values(payload).every(({ id }) => !!id)).toEqual(true);
@@ -117,10 +152,7 @@ describe('serversReducer', () => {
     });
 
     describe('setAutoConnect', () => {
-      it.each([
-        [true],
-        [false],
-      ])('returns expected action', (autoConnect) => {
+      it.each([[true], [false]])('returns expected action', (autoConnect) => {
         const serverToEdit = fromPartial<RegularServer>({ id: 'abc123' });
         const { payload } = setAutoConnect(serverToEdit, autoConnect);
 
