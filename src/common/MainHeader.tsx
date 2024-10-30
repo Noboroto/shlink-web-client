@@ -6,7 +6,6 @@ import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
-import axios from 'axios';
 import type { FCWithDeps } from '../container/utils';
 import { componentFactory, useDependencies } from '../container/utils';
 import { ShlinkLogo } from './img/ShlinkLogo';
@@ -62,7 +61,7 @@ const MainHeader: FCWithDeps<unknown, MainHeaderDeps> = () => {
 			<Collapse navbar isOpen={isNotCollapsed}>
 				<Nav navbar className="ms-auto">
 					{email && (
-						<NavItem className="me-3">
+						<NavItem className="me-3 d-flex align-items-center justify-content-center">
 							<span className="navbar-text text-white">{email}</span>
 						</NavItem>
 					)}
