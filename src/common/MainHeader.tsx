@@ -10,12 +10,18 @@ import type { FCWithDeps } from '../container/utils';
 import { componentFactory, useDependencies } from '../container/utils';
 import { ShlinkLogo } from './img/ShlinkLogo';
 import './MainHeader.scss';
+import type { ServersMap } from '../servers/data';
 
-type MainHeaderDeps = {
+export type MainHeaderProps = {
+	servers: ServersMap;
+};
+export type MainHeaderDeps = {
 	ServersDropdown: FC;
 };
 
-const MainHeader: FCWithDeps<unknown, MainHeaderDeps> = () => {
+const MainHeader: FCWithDeps<MainHeaderProps, MainHeaderDeps> = (
+	{ servers },
+) => {
 	const { ServersDropdown } = useDependencies(MainHeader);
 	const [isNotCollapsed, toggleCollapse, , collapse] = useToggle();
 	const location = useLocation();
@@ -32,6 +38,7 @@ const MainHeader: FCWithDeps<unknown, MainHeaderDeps> = () => {
 				const response = await fetch('/oauth2/userinfo');
 				setEmail((await response.json())["email"]);
 			} catch (error) {
+				setEmail("n/a");
 				console.error('Error fetching email:', error);
 			}
 		};
@@ -70,7 +77,9 @@ const MainHeader: FCWithDeps<unknown, MainHeaderDeps> = () => {
 							<FontAwesomeIcon icon={cogsIcon} />&nbsp; Settings
 						</NavLink>
 					</NavItem>
-					<ServersDropdown />
+					{(Object.keys(servers).length > 1) && (
+						<ServersDropdown />
+					)}
 					<NavItem>
 						<NavLink href="#" onClick={signOut}>
 							<FontAwesomeIcon icon={logoutIcon} />&nbsp; Sign Out
